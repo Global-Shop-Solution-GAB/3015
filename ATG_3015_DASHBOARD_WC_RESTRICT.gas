@@ -1,0 +1,49 @@
+Program.Sub.ScreenSU.Start
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+V.Local.sQuery.Declare(String)
+V.Local.sRet.Declare(String)
+
+
+F.ODBC.Connection!conx.OpenConnection(V.Ambient.pdsn,V.Ambient.PUser,V.Ambient.PPass)
+
+F.ODBC.Connection!conx.OpenRecordsetRO("rst","SELECT WC FROM ATG_3015_WC_EXCLUDE")
+F.Intrinsic.Control.dountil(V.ODBC.conx!rst.EOF,=,True)
+	F.Intrinsic.Control.If(V.ODBC.conx!rst.FieldValTrim!WC,<>,"")
+		F.Intrinsic.Control.If(V.Local.sRet,=,"")
+			F.Intrinsic.String.Concat(" AND ( ",V.Passed.data-RESTRICT_FIELD," <> '",V.ODBC.conx!rst.FieldValtrim!WC,"' ",V.Local.sret)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.String.Concat(V.Local.sRet," AND ",V.Passed.data-RESTRICT_FIELD," <> '",V.ODBC.conx!rst.FieldValtrim!WC,"' ",V.Local.sret)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.endif
+	F.ODBC.conx!rst.MoveNext
+F.Intrinsic.Control.Loop
+F.ODBC.Conx!rst.Close
+
+F.Intrinsic.string.Concat(V.local.sret,")",V.Local.sRet)
+
+F.ODBC.Connection!conx.OpenRecordsetRO("rst","SELECT EMPLOYEE FROM ATG_EMPLOYEE_EXCLUDE")
+F.Intrinsic.Control.dountil(V.ODBC.conx!rst.EOF,=,True)
+	F.Intrinsic.Control.If(V.ODBC.conx!rst.FieldValTrim!EMPLOYEE,<>,"")
+		F.Intrinsic.Control.If(V.Local.sRet,=,"")
+			F.Intrinsic.String.Concat(" AND ( ",V.Passed.data-RESTRICT_FIELD2," <> '",V.ODBC.conx!rst.FieldValtrim!EMPLOYEE,"' ",V.Local.sret)
+		F.Intrinsic.Control.Else
+			F.Intrinsic.String.Concat(V.Local.sRet," AND ",V.Passed.data-RESTRICT_FIELD2," <> '",V.ODBC.conx!rst.FieldValtrim!EMPLOYEE,"' ",V.Local.sret)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.endif
+	F.ODBC.conx!rst.MoveNext
+F.Intrinsic.Control.Loop
+F.ODBC.Conx!rst.Close
+F.ODBC.Connection!conx.Close
+'F.Intrinsic.string.Concat(V.local.sret,")",V.Local.sRet)
+
+V.passed.data-restrict.set(V.Local.sRet)
+
+Program.Sub.Main.End
+
+
