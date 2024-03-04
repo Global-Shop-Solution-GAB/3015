@@ -1,0 +1,168 @@
+Program.Sub.ScreenSU.Start
+gui.F_Main..create
+gui.F_Main..caption("Dashboard Restrict")
+gui.F_Main..size(4700,2000)
+gui.F_Main..position(0,0)
+gui.F_Main..event(unload,f_main_unload)
+gui.F_Main..alwaysontop(False)
+gui.F_Main..fontname("Arial")
+gui.F_Main..fontsize(8)
+gui.F_Main..forecolor(0)
+gui.F_Main..fontstyle(,,,,)
+gui.F_Main..BackColor(-2147483633)
+gui.F_Main..controlbox(True)
+gui.F_Main..maxbutton(True)
+gui.F_Main..minbutton(True)
+gui.F_Main..mousepointer(0)
+gui.F_Main..moveable(True)
+gui.F_Main..sizeable(True)
+gui.F_Main..ShowInTaskBar(True)
+gui.F_Main..titlebar(True)
+gui.F_Main.txt1.create(textbox)
+gui.F_Main.txt1.text("")
+gui.F_Main.txt1.visible(True)
+gui.F_Main.txt1.size(750,300)
+gui.F_Main.txt1.zorder(0)
+gui.F_Main.txt1.position(100,400)
+gui.F_Main.txt1.enabled(True)
+gui.F_Main.txt1.alignment(0)
+gui.F_Main.txt1.fontname("Arial")
+gui.F_Main.txt1.fontsize(8)
+gui.F_Main.txt1.BackColor(-2147483643)
+gui.F_Main.txt2.create(textbox)
+gui.F_Main.txt2.text("")
+gui.F_Main.txt2.visible(True)
+gui.F_Main.txt2.size(2955,300)
+gui.F_Main.txt2.zorder(0)
+gui.F_Main.txt2.position(915,400)
+gui.F_Main.txt2.enabled(True)
+gui.F_Main.txt2.alignment(0)
+gui.F_Main.txt2.fontname("Arial")
+gui.F_Main.txt2.fontsize(8)
+gui.F_Main.txt2.BackColor(-2147483643)
+gui.F_Main.chkRestrict.create(checkbox)
+gui.F_Main.chkRestrict.caption("Restrict from Dashboard")
+gui.F_Main.chkRestrict.visible(True)
+gui.F_Main.chkRestrict.size(3075,255)
+gui.F_Main.chkRestrict.zorder(0)
+gui.F_Main.chkRestrict.position(125,830)
+gui.F_Main.chkRestrict.enabled(True)
+gui.F_Main.chkRestrict.alignment(0)
+gui.F_Main.chkRestrict.fontname("Arial")
+gui.F_Main.chkRestrict.fontsize(8)
+gui.F_Main.cmdSave.create(button)
+gui.F_Main.cmdSave.caption("Save")
+gui.F_Main.cmdSave.visible(True)
+gui.F_Main.cmdSave.size(855,375)
+gui.F_Main.cmdSave.zorder(0)
+gui.F_Main.cmdSave.position(3395,780)
+gui.F_Main.cmdSave.enabled(True)
+gui.F_Main.cmdSave.fontname("Arial")
+gui.F_Main.cmdSave.fontsize(8)
+gui.F_Main.cmdSave.event(click,cmdsave_click)
+gui.F_Main.lbl1.create(label)
+gui.F_Main.lbl1.caption("WC")
+gui.F_Main.lbl1.backstyle(0)
+gui.F_Main.lbl1.visible(True)
+gui.F_Main.lbl1.size(705,255)
+gui.F_Main.lbl1.zorder(1)
+gui.F_Main.lbl1.position(110,200)
+gui.F_Main.lbl1.enabled(True)
+gui.F_Main.lbl1.alignment(0)
+gui.F_Main.lbl1.fontname("Arial")
+gui.F_Main.lbl1.fontsize(8)
+gui.F_Main.lbl1.BackColor(-2147483633)
+gui.F_Main.lbl2.create(label)
+gui.F_Main.lbl2.caption("Name")
+gui.F_Main.lbl2.backstyle(0)
+gui.F_Main.lbl2.visible(True)
+gui.F_Main.lbl2.size(1935,255)
+gui.F_Main.lbl2.zorder(1)
+gui.F_Main.lbl2.position(935,200)
+gui.F_Main.lbl2.enabled(True)
+gui.F_Main.lbl2.alignment(0)
+gui.F_Main.lbl2.fontname("Arial")
+gui.F_Main.lbl2.fontsize(8)
+gui.F_Main.lbl2.BackColor(-2147483633)
+gui.F_Main.cmdBrowse.create(button)
+gui.F_Main.cmdBrowse.caption("V")
+gui.F_Main.cmdBrowse.visible(True)
+gui.F_Main.cmdBrowse.size(270,330)
+gui.F_Main.cmdBrowse.zorder(0)
+gui.F_Main.cmdBrowse.position(3965,395)
+gui.F_Main.cmdBrowse.enabled(True)
+gui.F_Main.cmdBrowse.fontname("Arial")
+gui.F_Main.cmdBrowse.fontsize(8)
+gui.F_Main.cmdBrowse.event(click,cmdbrowse_click)
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+
+
+F.ODBC.Connection!conx.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+
+Gui.F_Main..Show
+
+Program.Sub.Main.End
+
+program.sub.f_main_unload.start
+F.Intrinsic.Control.End
+
+program.sub.f_main_unload.end
+
+program.sub.cmdbrowse_click.start
+V.Local.sCol.Declare(String)
+V.Local.sWidth.Declare(String)
+
+V.Local.sret.Declare(String)
+V.Local.squery.Declare(String)
+
+F.Intrinsic.String.Split("WC*!*Description","*!*",V.Local.sCol)
+F.Intrinsic.String.Split("2000*!*4000","*!*",V.Local.swidth)
+
+V.Local.squery.Set("SELECT Machine, WC_NAME FROM V_WORKCENTERS ORDER BY Machine")
+F.intrinsic.UI.Browser("Select Department","conx",V.Local.squery,V.Local.sCol,V.Local.sWidth,V.Local.sret)
+F.Intrinsic.Control.If(V.Local.sret,<>,"***CANCEL***")
+	F.Intrinsic.string.Split(V.Local.sret,"*!*",V.Local.sret)
+	Gui.F_Main.txt1.Text(V.Local.sret(0).trim)
+	Gui.F_Main.txt2.Text(V.Local.sret(1).trim)
+	'get status
+	F.Intrinsic.String.Concat("SELECT WC FROM ATG_3015_WC_EXCLUDE WHERE WC = '",V.Local.sret(0).Trim,"'",V.Local.squery)
+	F.ODBC.Connection!conx.OpenRecordsetRO("rst",V.Local.squery)
+	F.Intrinsic.Control.If(V.ODBC.conx!rst.EOF,=,False)
+		Gui.F_Main.chkRestrict.Value(1)
+	F.Intrinsic.Control.Else
+		Gui.F_Main.chkRestrict.Value(0)
+	F.Intrinsic.Control.EndIf
+	F.ODBC.ConX!rst.Close
+
+F.Intrinsic.Control.EndIf
+
+program.sub.cmdbrowse_click.end
+
+program.sub.cmdsave_click.start
+V.Local.squery.Declare(String)
+F.Intrinsic.Control.If(V.Screen.F_Main!chkRestrict.value,=,1)
+	F.Intrinsic.String.Concat("SELECT WC FROM ATG_3015_WC_EXCLUDE WHERE WC = '",V.Screen.F_Main!txt1.text,"'",V.Local.squery)
+	F.ODBC.Connection!conx.OpenRecordsetRW("rst",V.Local.squery)
+	F.Intrinsic.Control.If(V.ODBC.conx!rst.EOF,=,True)
+		F.odbc.conx!rst.AddNew
+		F.ODBC.conx!rst.Set!WC(V.Screen.F_Main!txt1.Text)
+		F.ODBC.conx!rst.Update
+	F.Intrinsic.Control.EndIf
+	F.ODBC.conx!rst.close
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Concat("DELETE FROM ATG_3015_WC_EXCLUDE WHERE WC = '",V.Screen.F_Main!txt1.text,"'",V.Local.squery)
+	F.ODBC.Connection!conx.Execute(V.Local.squery)
+F.Intrinsic.Control.EndIf
+F.Intrinsic.ui.Msgbox("WC Saved")
+
+program.sub.cmdsave_click.end
+
+
